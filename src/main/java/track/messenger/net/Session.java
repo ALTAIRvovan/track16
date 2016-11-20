@@ -4,8 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 import track.messenger.User;
+import track.messenger.commands.Command;
+import track.messenger.commands.CommandException;
+import track.messenger.commands.CommandFactory;
 import track.messenger.messages.Message;
 
 /**
@@ -22,7 +27,7 @@ public class Session {
     private User user;
 
     // сокет на клиента
-    private Socket socket;
+    private SocketChannel socket;
 
     /**
      * С каждым сокетом связано 2 канала in/out
@@ -30,12 +35,23 @@ public class Session {
     private InputStream in;
     private OutputStream out;
 
-    public void send(Message msg) throws ProtocolException, IOException {
-        // TODO: Отправить клиенту сообщение
+    public Session(SocketChannel socket) {
+        this.socket = socket;
     }
 
-    public void onMessage(Message msg) {
-        // TODO: Пришло некое сообщение от клиента, его нужно обработать
+    public void send(Message msg) throws ProtocolException, IOException {
+        byte[] bytes = ConnectionManager.getProtocol().encode(msg);
+        socket.write(ByteBuffer.wrap(bytes));
+    }
+
+    public void onMessage(Message message) {
+        Command command = null;
+        try {
+            command = CommandFactory.getCommand(message.getType());
+            command.execute(this, message);
+        } catch (CommandException e) {
+            e.printStackTrace();
+        }
     }
 
     public void close() {

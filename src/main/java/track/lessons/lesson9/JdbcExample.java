@@ -7,7 +7,7 @@ public class JdbcExample {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
         Class.forName("org.sqlite.JDBC");
-        Connection connection = DriverManager.getConnection("jdbc:sqlite:testDb.s3db");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/test?user=root&password=134579z");
 
         Statement stmt;
         String sql;
@@ -26,16 +26,16 @@ public class JdbcExample {
         connection.setAutoCommit(false);
 
         stmt = connection.createStatement();
-        sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) VALUES (1, 'Paul', 32, 'California', 20000.00 );";
+        sql = "INSERT INTO company (ID,NAME,AGE,ADDRESS,SALARY) VALUES (1, 'Paul', 32, 'California', 20000.00 );";
         stmt.executeUpdate(sql);
 
-        sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) VALUES (2, 'Allen', 25, 'Texas', 15000.00 );";
+        sql = "INSERT INTO company (ID,NAME,AGE,ADDRESS,SALARY) VALUES (2, 'Allen', 25, 'Texas', 15000.00 );";
         stmt.executeUpdate(sql);
 
-        sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );";
+        sql = "INSERT INTO company (ID,NAME,AGE,ADDRESS,SALARY) VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );";
         stmt.executeUpdate(sql);
 
-        sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
+        sql = "INSERT INTO company (ID,NAME,AGE,ADDRESS,SALARY) VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
         stmt.executeUpdate(sql);
 
         stmt.close();

@@ -149,7 +149,7 @@ public class MessengerClient {
 
         MessengerClient client = new MessengerClient();
         client.setHost("localhost");
-        client.setPort(19000);
+        client.setPort(10000);
         client.setProtocol(new StringProtocol());
 
         try {
