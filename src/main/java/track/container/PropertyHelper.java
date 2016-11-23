@@ -25,22 +25,7 @@ public class PropertyHelper {
      */
     public static Class getValSetterMethodParamType(Class clazz, Property property)
             throws NoSuchFieldException, IllegalAccessException {
-        Field field = null;
-        try {
-            field = clazz.getDeclaredField(property.getName());
-        } catch (NoSuchFieldException ex) {
-            for (Class superclass = clazz.getSuperclass(); !superclass.equals(Object.class); superclass = superclass.getSuperclass()) {
-                try {
-                    field = superclass.getDeclaredField(property.getName());
-                } catch (NoSuchFieldException ex2) {
-                    continue;
-                }
-                break;
-            }
-            if (field == null) {
-                throw ex;
-            }
-        }
+        Field field = getDeclaredField(clazz, property.getName());
         Class type = field.getType();
         if (type.equals(long.class)) {
             return long.class;
@@ -107,5 +92,25 @@ public class PropertyHelper {
             }
         }
         return method;
+    }
+
+    public static Field getDeclaredField(Class clazz, String name) throws NoSuchFieldException {
+        Field field = null;
+        try {
+            field = clazz.getDeclaredField(name);
+        } catch (NoSuchFieldException ex) {
+            for (Class superclass = clazz.getSuperclass(); !superclass.equals(Object.class); superclass = superclass.getSuperclass()) {
+                try {
+                    field = superclass.getDeclaredField(name);
+                } catch (NoSuchFieldException ex2) {
+                    continue;
+                }
+                break;
+            }
+            if (field == null) {
+                throw ex;
+            }
+        }
+        return field;
     }
 }

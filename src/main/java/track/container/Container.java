@@ -137,8 +137,14 @@ public class Container {
                 } else {
                     Object paramObj = getById(property.getValue());
                     Class type = paramObj.getClass();
-                    Method method = getDeclaredMethod(clazz, getSetterMethodName(propEntry.getKey()), type);
-                    method.invoke(obj, paramObj);
+                    try {
+                        Method method = getDeclaredMethod(clazz, getSetterMethodName(propEntry.getKey()), type);
+                        method.invoke(obj, paramObj);
+                    } catch (NoSuchMethodException ex) {
+                        Field field = getDeclaredField(clazz, property.getName());
+                        field.setAccessible(true);
+                        field.set(obj, paramObj);
+                    }
                 }
             } catch (NoSuchFieldException | NoSuchMethodException ex) {
                 System.out.println("Property " + propEntry.getKey() + " isn't used");
