@@ -13,6 +13,8 @@ public class CommandFactory {
         switch (type) {
             case MSG_TEXT:
                 return new TextMessageCommand();
+            case MSG_INFO:
+                return new InfoCommand();
         }
         throw new CommandException("Command not found");
     }
