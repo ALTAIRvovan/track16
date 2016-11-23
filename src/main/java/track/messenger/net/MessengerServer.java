@@ -5,10 +5,14 @@ package track.messenger.net;
  */
 public class MessengerServer {
 
+    private ConnectionManager connectionManager;
+
+    public MessengerServer() {}
+
     public void run() {
-        ConnectionManager connectionManager = new ConnectionManager();
-        connectionManager.setPort(10000);
-        ConnectionManager.setProtocol(new SerializeProtocol());
+        //ConnectionManager connectionManager = new ConnectionManager();
+        //connectionManager.setPort(10000);
+        //ConnectionManager.setProtocol(new SerializeProtocol());
         Thread connectionManagerThread = new Thread(connectionManager);
         connectionManagerThread.start();
     }

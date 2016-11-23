@@ -41,6 +41,38 @@
           "type": "VAL"
         }
       }
+    },
+    {
+      "id": "MessengerServer",
+      "className": "track.messenger.net.MessengerServer",
+      "properties": {
+        "connectionManager": {
+          "name": "connectionManager",
+          "value": "ConnectionManager",
+          "type": "REF"
+        }
+      }
+    },
+    {
+      "id": "ConnectionManager",
+      "className": "track.messenger.net.ConnectionManager",
+      "properties": {
+        "protocol": {
+          "name": "protocol",
+          "value": "Protocol",
+          "type": "REF"
+        },
+        "port": {
+          "name": "port",
+          "value": "10000",
+          "type": "VAL"
+        }
+      }
+    },
+    {
+      "id": "Protocol",
+      "className": "track.messenger.net.SerializeProtocol",
+      "properties": {}
     }
   ]
 }
