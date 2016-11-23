@@ -1,6 +1,6 @@
 package track.messenger.store;
 
-import track.messenger.User;
+import track.messenger.models.User;
 
 public interface UserStore {
     /**

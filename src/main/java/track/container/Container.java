@@ -25,8 +25,26 @@ public class Container {
     private Map<String, Object> objByClassName;
     private List<Bean> beansById;
 
+    private static Container instance = null;
+
+    public Container() {
+        objById = new HashMap<>();
+        objByClassName = new HashMap<>();
+    }
+
+    public static Container getInstance() {
+        if (instance == null) {
+            instance = new Container();
+        }
+        return instance;
+    }
+
     // Реализуйте этот конструктор, используется в тестах!
     public Container(List<Bean> beans) {
+        setBeans(beans);
+    }
+
+    public void setBeans(List<Bean> beans) {
         beansById = beans;
         objById = new HashMap<>();
         objByClassName = new HashMap<>();

@@ -40,6 +40,8 @@ public class PropertyHelper {
             return float.class;
         } else if (type.equals(boolean.class)) {
             return boolean.class;
+        } else if (type.equals(String.class)) {
+            return String.class;
         }
         throw new IllegalArgumentException("Property type is not primitive type");
     }
@@ -65,6 +67,8 @@ public class PropertyHelper {
             return Float.parseFloat(propertyValue);
         } else if (type.equals(boolean.class)) {
             return Boolean.parseBoolean(propertyValue);
+        } else if (type.equals(String.class)) {
+            return propertyValue;
         }
         throw new IllegalArgumentException("Property type is not primitive type");
     }
