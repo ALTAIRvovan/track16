@@ -3,6 +3,7 @@ package track.container;
 import track.container.config.Property;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Created by altair on 04.11.16.
@@ -24,7 +25,22 @@ public class PropertyHelper {
      */
     public static Class getValSetterMethodParamType(Class clazz, Property property)
             throws NoSuchFieldException, IllegalAccessException {
-        Field field = clazz.getDeclaredField(property.getName());
+        Field field = null;
+        try {
+            field = clazz.getDeclaredField(property.getName());
+        } catch (NoSuchFieldException ex) {
+            for (Class superclass = clazz.getSuperclass(); !superclass.equals(Object.class); superclass = superclass.getSuperclass()) {
+                try {
+                    field = superclass.getDeclaredField(property.getName());
+                } catch (NoSuchFieldException ex2) {
+                    continue;
+                }
+                break;
+            }
+            if (field == null) {
+                throw ex;
+            }
+        }
         Class type = field.getType();
         if (type.equals(long.class)) {
             return long.class;
@@ -71,5 +87,25 @@ public class PropertyHelper {
             return propertyValue;
         }
         throw new IllegalArgumentException("Property type is not primitive type");
+    }
+
+    public static Method getDeclaredMethod(Class clazz, String name, Class type) throws NoSuchMethodException {
+        Method method = null;
+        try {
+            method = clazz.getDeclaredMethod(name, type);
+        } catch (NoSuchMethodException ex) {
+            for (Class superclass = clazz.getSuperclass(); !superclass.equals(Object.class); superclass = superclass.getSuperclass()) {
+                try {
+                    method = superclass.getDeclaredMethod(name, type);
+                } catch (NoSuchMethodException ex2) {
+                    continue;
+                }
+                break;
+            }
+            if (method == null) {
+                throw ex;
+            }
+        }
+        return method;
     }
 }

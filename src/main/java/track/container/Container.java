@@ -132,12 +132,12 @@ public class Container {
                 Property property = propEntry.getValue();
                 if (propEntry.getValue().getType() == ValueType.VAL) {
                     Class type = getValSetterMethodParamType(clazz, property);
-                    Method method = clazz.getMethod(getSetterMethodName(propEntry.getKey()), type);
+                    Method method = getDeclaredMethod(clazz, getSetterMethodName(propEntry.getKey()), type);
                     method.invoke(obj, getValSetterMethodParam(type, property.getValue()));
                 } else {
                     Object paramObj = getById(property.getValue());
                     Class type = paramObj.getClass();
-                    Method method = clazz.getMethod(getSetterMethodName(propEntry.getKey()), type);
+                    Method method = getDeclaredMethod(clazz, getSetterMethodName(propEntry.getKey()), type);
                     method.invoke(obj, paramObj);
                 }
             } catch (NoSuchFieldException | NoSuchMethodException ex) {

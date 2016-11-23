@@ -1,7 +1,7 @@
 {
   "beans": [
     {
-      "id": "dBConnectionManager",
+      "id": "DBConnectionManager",
       "className": "track.messenger.database.DBConnectionManager",
       "properties": {
         "poolDataSource": {
@@ -15,8 +15,13 @@
       "id": "ConnectionPoolDataSource",
       "className": "com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource",
       "properties": {
+        "url": {
+          "name": "url",
+          "value": "jdbc:mysql://localhost/test?user=root&password=134579z",
+          "type": "VAL"
+        },
         "serverName": {
-          "name": "serverName",
+          "name": "hostName",
           "value": "localhost",
           "type": "VAL"
         },
