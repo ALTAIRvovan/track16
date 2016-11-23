@@ -1,13 +1,10 @@
 package track.messenger.net;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import track.messenger.User;
+import track.messenger.models.User;
 import track.messenger.commands.Command;
 import track.messenger.commands.CommandException;
 import track.messenger.commands.CommandFactory;
@@ -29,11 +26,6 @@ public class Session {
     // сокет на клиента
     private SocketChannel socket;
 
-    /**
-     * С каждым сокетом связано 2 канала in/out
-     */
-    private InputStream in;
-    private OutputStream out;
 
     public Session(SocketChannel socket) {
         this.socket = socket;
@@ -56,5 +48,9 @@ public class Session {
 
     public void close() {
         // TODO: закрыть in/out каналы и сокет. Освободить другие ресурсы, если необходимо
+    }
+
+    public boolean isAutorized() {
+        return user != null && user.isAutorized();
     }
 }

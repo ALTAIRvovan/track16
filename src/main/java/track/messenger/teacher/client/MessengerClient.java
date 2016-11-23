@@ -16,6 +16,7 @@ import track.messenger.messages.TextMessage;
 import track.messenger.messages.Type;
 import track.messenger.net.Protocol;
 import track.messenger.net.ProtocolException;
+import track.messenger.net.SerializeProtocol;
 import track.messenger.net.StringProtocol;
 
 
@@ -129,6 +130,11 @@ public class MessengerClient {
                 sendMessage.setText(tokens[1]);
                 send(sendMessage);
                 break;
+            case "/info":
+                TextMessage infoMessage = new TextMessage();
+                infoMessage.setType(Type.MSG_INFO);
+                send(infoMessage);
+                break;
             // TODO: implement another types from wiki
 
             default:
@@ -150,7 +156,7 @@ public class MessengerClient {
         MessengerClient client = new MessengerClient();
         client.setHost("localhost");
         client.setPort(10000);
-        client.setProtocol(new StringProtocol());
+        client.setProtocol(new SerializeProtocol());
 
         try {
             client.initSocket();

@@ -1,0 +1,41 @@
+{
+  "beans": [
+    {
+      "id": "dBConnectionManager",
+      "className": "track.messenger.database.DBConnectionManager",
+      "properties": {
+        "poolDataSource": {
+          "name": "poolDataSource",
+          "value": "ConnectionPoolDataSource",
+          "type": "REF"
+        }
+      }
+    },
+    {
+      "id": "ConnectionPoolDataSource",
+      "className": "com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource",
+      "properties": {
+        "serverName": {
+          "name": "serverName",
+          "value": "localhost",
+          "type": "VAL"
+        },
+        "user": {
+          "name": "user",
+          "value": "root",
+          "type": "VAL"
+        },
+        "databaseName": {
+          "name": "databaseName",
+          "value": "test",
+          "type": "VAL"
+        },
+        "password": {
+          "name": "password",
+          "value": "134579z",
+          "type": "VAL"
+        }
+      }
+    }
+  ]
+}
