@@ -19,4 +19,8 @@ public class DBConnectionManager {
         return poolDataSource.getPooledConnection().getConnection();
     }
 
+    public void setPoolDataSource(ConnectionPoolDataSource poolDataSource) {
+        this.poolDataSource = poolDataSource;
+    }
+
 }

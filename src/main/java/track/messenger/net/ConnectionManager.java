@@ -98,13 +98,18 @@ public class ConnectionManager implements Runnable {
         return serverSocketChannel;
     }
 
-    private void addSessionToSocket(SocketChannel socketChannel) {
+    private Session addSessionToSocket(SocketChannel socketChannel) {
         Session session = new Session(socketChannel);
         socketChannelSessionMap.put(socketChannel, session);
+        return session;
     }
 
     private Session getSessionBySocket(SocketChannel socketChannel) {
-        return socketChannelSessionMap.getOrDefault(socketChannel, new Session(socketChannel));
+        Session session = socketChannelSessionMap.get(socketChannel);
+        if (session != null) {
+            return session;
+        }
+        return addSessionToSocket(socketChannel);
     }
 
     public void processInput(SocketChannel socketChannel) throws IOException {

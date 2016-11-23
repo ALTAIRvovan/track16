@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import track.messenger.messages.Message;
 import track.messenger.messages.TextMessage;
 import track.messenger.messages.Type;
+import track.messenger.messages.account.LoginMessage;
+import track.messenger.messages.account.RegisterMessage;
 import track.messenger.net.Protocol;
 import track.messenger.net.ProtocolException;
 import track.messenger.net.SerializeProtocol;
@@ -118,7 +120,16 @@ public class MessengerClient {
         String cmdType = tokens[0];
         switch (cmdType) {
             case "/login":
-                // TODO: реализация
+                LoginMessage loginMessage = new LoginMessage();
+                loginMessage.setLogin(tokens[1]);
+                loginMessage.setPassword(tokens[2]);
+                send(loginMessage);
+                break;
+            case "/reg":
+                RegisterMessage registerMessage = new RegisterMessage();
+                registerMessage.setLogin(tokens[1]);
+                registerMessage.setPassword(tokens[2]);
+                send(registerMessage);
                 break;
             case "/help":
                 // TODO: реализация

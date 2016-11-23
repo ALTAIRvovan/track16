@@ -2,6 +2,7 @@ package track.messenger.net;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.log4j.Logger;
 import track.messenger.messages.Message;
 
 import java.io.IOException;
@@ -24,7 +25,9 @@ public class SerializeProtocol implements Protocol {
     public byte[] encode(Message msg) throws ProtocolException {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.writeValueAsBytes(msg);
+            byte[] message = mapper.writeValueAsBytes(msg);
+            Logger.getLogger(SerializeProtocol.class).info(new String(message));
+            return message;
         } catch (JsonProcessingException e) {
             throw new ProtocolException(e);
         }

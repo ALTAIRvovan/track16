@@ -1,5 +1,6 @@
 package track.messenger.commands;
 
+import track.messenger.commands.accaunts.LoginCommand;
 import track.messenger.messages.Type;
 
 /**
@@ -15,6 +16,8 @@ public class CommandFactory {
                 return new TextMessageCommand();
             case MSG_INFO:
                 return new InfoCommand();
+            case MSG_LOGIN:
+                return new LoginCommand();
         }
         throw new CommandException("Command not found");
     }

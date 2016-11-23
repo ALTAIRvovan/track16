@@ -24,7 +24,8 @@ public abstract class AbstractStorage<T> {
 
     public AbstractStorage() throws DBException {
         try {
-            connectionManager = (DBConnectionManager) Container.getInstance().getByClass("DBConnectionManager");
+            connectionManager = (DBConnectionManager) Container.getInstance().getById("DBConnectionManager");
+
         } catch (IllegalClassFormatException e) {
             throw new DBException("Не удалось создать connectionManager", e);
         }

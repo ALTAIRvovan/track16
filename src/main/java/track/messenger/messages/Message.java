@@ -1,5 +1,6 @@
 package track.messenger.messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -13,7 +14,10 @@ import java.io.Serializable;
         include = JsonTypeInfo.As.PROPERTY,
         property = "class")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = TextMessage.class, name = "text_message") })
+        @JsonSubTypes.Type(value = TextMessage.class, name = "text_message"),
+        @JsonSubTypes.Type(value = FormMessage.class, name = "form_message"),
+})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Message implements Serializable {
 
     private Long id;

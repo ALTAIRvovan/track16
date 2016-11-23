@@ -53,4 +53,12 @@ public class Session {
     public boolean isAutorized() {
         return user != null && user.isAutorized();
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

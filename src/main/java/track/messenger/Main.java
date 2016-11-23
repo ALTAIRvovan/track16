@@ -5,9 +5,12 @@ import track.container.JsonConfigReader;
 import track.container.config.Bean;
 import track.container.config.ConfigReader;
 import track.container.config.InvalidConfigurationException;
+import track.messenger.database.DBConnectionManager;
 import track.messenger.net.MessengerServer;
 
+import javax.sql.ConnectionPoolDataSource;
 import java.io.File;
+import java.lang.instrument.IllegalClassFormatException;
 import java.util.List;
 
 /**
@@ -29,6 +32,12 @@ public class Main {
             List<Bean> beans = reader.parseBeans(file);
             container.setBeans(beans);
         } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        try {
+            DBConnectionManager connectionManager = (DBConnectionManager) Container.getInstance().getById("DBConnectionManager");
+            System.out.print(connectionManager.toString());
+        } catch (IllegalClassFormatException e) {
             e.printStackTrace();
         }
     }

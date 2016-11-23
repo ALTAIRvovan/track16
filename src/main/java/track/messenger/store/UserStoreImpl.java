@@ -22,6 +22,7 @@ public class UserStoreImpl extends AbstractStorage<User> implements UserStore {
     @Override
     public User getObjectFromResultSet(ResultSet resultSet) throws SQLException {
         User user = new User();
+        user.setId(resultSet.getLong("id"));
         user.setLogin(resultSet.getString("login"));
         user.setPassword(resultSet.getString("password"));
         return user;
@@ -61,7 +62,7 @@ public class UserStoreImpl extends AbstractStorage<User> implements UserStore {
      */
     @Override
     public User getUser(String login, String pass) {
-        List userList = selectObjects("`login` = " + login);
+        List userList = selectObjects("`login` = '" + login + "'");
         for (Object user: userList) {
             if ( ((User) user).checkPassword(pass)) {
                 return (User) user;
