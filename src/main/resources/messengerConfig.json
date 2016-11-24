@@ -73,6 +73,71 @@
       "id": "Protocol",
       "className": "track.messenger.net.SerializeProtocol",
       "properties": {}
+    },
+    {
+      "id": "StorageFactory",
+      "className": "track.messenger.store.StorageFactory",
+      "properties": {
+        "chatStore": {
+          "name": "chatStore",
+          "value": "ChatStore",
+          "type": "REF"
+        },
+        "userStore": {
+          "name": "userStore",
+          "value": "UserStore",
+          "type": "REF"
+        },
+        "chatUserRelationStore": {
+          "name": "chatUserRelationStore",
+          "value": "ChatUserRelationStore",
+          "type": "REF"
+        }
+      }
+    },
+    {
+      "id": "ChatUserRelationStore",
+      "className": "track.messenger.store.ChatUserRelationStoreImpl",
+      "properties": {
+        "dbTable": {
+          "name": "dbTable",
+          "value": "link_chat_user",
+          "type": "VAL"
+        }
+      }
+    },
+    {
+      "id": "UserStore",
+      "className": "track.messenger.store.UserStoreImpl",
+      "properties": {
+        "dbTable": {
+          "name": "dbTable",
+          "value": "users",
+          "type": "VAL"
+        }
+      }
+    },
+    {
+      "id": "ChatStore",
+      "className": "track.messenger.store.ChatStoreImpl",
+      "properties": {
+        "dbTable": {
+          "name": "dbTable",
+          "value": "chats",
+          "type": "VAL"
+        }
+      }
+    },
+    {
+      "id": "MessageStore",
+      "className": "track.messenger.store.MessageStoreImpl",
+      "properties": {
+        "dbTable": {
+          "name": "dbTable",
+          "value": "messages",
+          "type": "VAL"
+        }
+      }
     }
   ]
 }

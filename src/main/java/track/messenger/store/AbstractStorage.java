@@ -18,7 +18,7 @@ public abstract class AbstractStorage<T> {
 
     protected Logger logger;
 
-    protected static String dbTable;
+    public String dbTable;
 
     protected DBConnectionManager connectionManager;
 
@@ -31,10 +31,13 @@ public abstract class AbstractStorage<T> {
         }
     }
 
-    public int execUpdate(String sql) throws SQLException {
+    public ResultSet execUpdate(String sql) throws SQLException {
         try (Connection con = connectionManager.getConnection();) {
             Statement statement = con.createStatement();
-            return statement.executeUpdate(sql);
+            if (statement.executeUpdate(sql) > 0) {
+                return statement.getGeneratedKeys();
+            }
+            return null;
         }
     }
 
@@ -69,18 +72,19 @@ public abstract class AbstractStorage<T> {
     }
 
     public List selectObjects(String whereCond) {
-        return (List) select(whereCond, (resultSet) -> {
-            List<T> list = new ArrayList<T>();
-            try {
-                while (resultSet != null && resultSet.next()) {
-                    list.add(getObjectFromResultSet(resultSet));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
-        });
+        return (List) select(whereCond, this::getObjectListFromResultSet);
+    }
 
+    public List<T> getObjectListFromResultSet(ResultSet resultSet) {
+        List<T> list = new ArrayList<>();
+        try {
+            while (resultSet != null && resultSet.next()) {
+                list.add(getObjectFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public Object selectObject(String whereCond) {
@@ -94,24 +98,33 @@ public abstract class AbstractStorage<T> {
         });
     }
 
-    public T insert(String cond) {
-        String sql = "INSERT INTO `" + dbTable + "` " + cond;
+    public Object getById(long id) {
+        return selectObject("`id`=" + id);
+    }
+
+    public List<Long> insert(String cond) {
+        String sql = "INSERT INTO `" + dbTable + "`" + cond;
+        Logger.getLogger(AbstractStorage.class).info(sql);
+        List<Long> list = new ArrayList<>();
         try {
-            return getObjectFromResultSet(execQuery(sql));
+            ResultSet resultSet = execUpdate(sql);
+            while (resultSet != null && resultSet.next()) {
+                list.add(resultSet.getLong(1));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return list;
     }
 
-    public int update(String setCond, String whereCond) {
+    public ResultSet update(String setCond, String whereCond) {
         String sql = "UPDATE `" + dbTable + "` SET " + setCond + " WHERE " + whereCond;
         try {
             return execUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return null;
     }
 
     public abstract T getObjectFromResultSet(ResultSet resultSet) throws SQLException;

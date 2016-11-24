@@ -131,6 +131,12 @@ public class MessengerClient {
                 registerMessage.setPassword(tokens[2]);
                 send(registerMessage);
                 break;
+            case "/create_chat":
+                TextMessage createChatMessage = new TextMessage();
+                createChatMessage.setType(Type.MSG_CHAT_CREATE);
+                createChatMessage.setText(tokens[1]);
+                send(createChatMessage);
+                break;
             case "/help":
                 // TODO: реализация
                 break;

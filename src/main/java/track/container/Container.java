@@ -5,6 +5,7 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,8 +133,14 @@ public class Container {
                 Property property = propEntry.getValue();
                 if (propEntry.getValue().getType() == ValueType.VAL) {
                     Class type = getValSetterMethodParamType(clazz, property);
-                    Method method = getDeclaredMethod(clazz, getSetterMethodName(propEntry.getKey()), type);
-                    method.invoke(obj, getValSetterMethodParam(type, property.getValue()));
+                    try {
+                        Method method = getDeclaredMethod(clazz, getSetterMethodName(propEntry.getKey()), type);
+                        method.invoke(obj, getValSetterMethodParam(type, property.getValue()));
+                    } catch (NoSuchMethodException ex) {
+                        Field field = getDeclaredField(clazz, property.getName());
+                        field.setAccessible(true);
+                        field.set(obj, property.getValue());
+                    }
                 } else {
                     Object paramObj = getById(property.getValue());
                     Class type = paramObj.getClass();
@@ -146,7 +153,7 @@ public class Container {
                         field.set(obj, paramObj);
                     }
                 }
-            } catch (NoSuchFieldException | NoSuchMethodException ex) {
+            } catch (NoSuchFieldException ex) {
                 System.out.println("Property " + propEntry.getKey() + " isn't used");
             }
         }
