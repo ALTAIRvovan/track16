@@ -1,7 +1,5 @@
 package track.messenger.net;
 
-import javassist.bytecode.analysis.*;
-
 import java.util.concurrent.*;
 
 /**
@@ -53,5 +51,13 @@ public class MessengerServer {
 
     public void setNumberWorkers(int numberWorkers) {
         this.numberWorkers = numberWorkers;
+    }
+
+    public int getQueueCapacity() {
+        return queueCapacity;
+    }
+
+    public void setQueueCapacity(int queueCapacity) {
+        this.queueCapacity = queueCapacity;
     }
 }
