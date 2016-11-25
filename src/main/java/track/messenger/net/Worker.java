@@ -36,10 +36,10 @@ public class Worker implements Runnable {
                         e.printStackTrace();
                     }
                     //socketChannel.write(buffer);
-                    buffer.clear();
                 } else if (numberOfBytes < 0) {
                     session.kill();
                 }
+                buffer.clear();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

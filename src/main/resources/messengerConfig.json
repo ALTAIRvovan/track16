@@ -60,6 +60,11 @@
           "name": "numberWorkers",
           "value": "2",
           "type": "VAL"
+        },
+        "sessionStorage": {
+          "name": "sessionStorage",
+          "value": "SessionStorage",
+          "type": "REF"
         }
       }
     },
@@ -132,6 +137,11 @@
           "type": "VAL"
         }
       }
+    },
+    {
+      "id": "SessionStorage",
+      "className": "track.messenger.net.SessionStorageImpl",
+      "properties": {}
     }
   ]
 }

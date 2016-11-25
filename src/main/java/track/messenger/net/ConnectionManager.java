@@ -1,21 +1,14 @@
 package track.messenger.net;
 
 import org.apache.log4j.Logger;
-import track.messenger.commands.Command;
-import track.messenger.commands.CommandException;
-import track.messenger.commands.CommandFactory;
-import track.messenger.messages.Message;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
@@ -30,11 +23,12 @@ public class ConnectionManager implements Runnable {
 
     private BlockingQueue<Session> outputSessionQueue;
 
-    private Map<SocketChannel, Session> socketChannelSessionMap = new HashMap<>();
+    private SessionStorage sessionStorage;
 
-    public ConnectionManager(int port, BlockingQueue<Session> outputSessionQueue) {
+    public ConnectionManager(int port, BlockingQueue<Session> outputSessionQueue, SessionStorage sessionStorage) {
         this.port = port;
         this.outputSessionQueue = outputSessionQueue;
+        this.sessionStorage = sessionStorage;
     }
 
     /**
@@ -63,31 +57,9 @@ public class ConnectionManager implements Runnable {
                 Set<SelectionKey> keys = selector.selectedKeys();
                 for (SelectionKey key : keys) {
                     if (key.isAcceptable()) {
-                        Socket acceptSocket = serverSocketChannel.socket().accept();
-                        SocketChannel socketChannel = acceptSocket.getChannel();
-                        socketChannel.configureBlocking(false);
-                        socketChannel.register(selector, SelectionKey.OP_READ);
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("New connection localAddr:" + socketChannel.getLocalAddress() +
-                                    " remoteAddr:" + socketChannel.getRemoteAddress());
-                        }
+                        processAcceptableKey(key, serverSocketChannel);
                     } else if (key.isReadable()) {
-                        SocketChannel socketChannel = (SocketChannel) key.channel();
-                        Session session = getSessionBySocket(socketChannel);
-                        if ( key.isValid() && session.isAlive() && socketChannel.isConnected()) {
-                            outputSessionQueue.add(session);
-                        } else {
-                            if (logger.isDebugEnabled()) {
-                                logger.debug("Connection has closed:" + socketChannel.getLocalAddress() +
-                                        " remoteAddr:" + socketChannel.getRemoteAddress());
-                            }
-                            removeSessionToSocket(socketChannel);
-                            key.cancel();
-                            socketChannel.close();
-
-                        }
-                        //processInput(socketChannel);
-                        //socketChannel.close();
+                        processReadableKey(key);
                     }
                 }
                 keys.clear();
@@ -96,6 +68,33 @@ public class ConnectionManager implements Runnable {
             e.printStackTrace();
         }
 
+    }
+
+    private void processAcceptableKey(SelectionKey key, ServerSocketChannel serverSocketChannel) throws IOException {
+        Socket acceptSocket = serverSocketChannel.socket().accept();
+        SocketChannel socketChannel = acceptSocket.getChannel();
+        socketChannel.configureBlocking(false);
+        socketChannel.register(key.selector(), SelectionKey.OP_READ);
+        if (logger.isDebugEnabled()) {
+            logger.debug("New connection localAddr:" + socketChannel.getLocalAddress() +
+                    " remoteAddr:" + socketChannel.getRemoteAddress());
+        }
+    }
+
+    private void processReadableKey(SelectionKey key) throws IOException {
+        SocketChannel socketChannel = (SocketChannel) key.channel();
+        Session session = getSessionBySocket(socketChannel);
+        if ( key.isValid() && session.isAlive() && socketChannel.isConnected()) {
+            outputSessionQueue.add(session);
+        } else {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Connection has closed:" + socketChannel.getLocalAddress() +
+                        " remoteAddr:" + socketChannel.getRemoteAddress());
+            }
+            removeSessionToSocket(socketChannel);
+            key.cancel();
+            socketChannel.close();
+        }
     }
 
     public void setPort(int port) {
@@ -111,20 +110,14 @@ public class ConnectionManager implements Runnable {
     }
 
     private Session addSessionToSocket(SocketChannel socketChannel) {
-        Session session = new Session(socketChannel);
-        socketChannelSessionMap.put(socketChannel, session);
-        return session;
+        return sessionStorage.addSessionToSocket(socketChannel);
     }
 
     private void removeSessionToSocket(SocketChannel socketChannel) {
-        socketChannelSessionMap.remove(socketChannel);
+        sessionStorage.removeSessionToSocket(socketChannel);
     }
 
     private Session getSessionBySocket(SocketChannel socketChannel) {
-        Session session = socketChannelSessionMap.get(socketChannel);
-        if (session != null) {
-            return session;
-        }
-        return addSessionToSocket(socketChannel);
+        return sessionStorage.getSessionBySocket(socketChannel);
     }
 }

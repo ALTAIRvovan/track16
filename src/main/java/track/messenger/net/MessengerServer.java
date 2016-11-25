@@ -13,12 +13,13 @@ public class MessengerServer {
     private int port;
     private static Protocol protocol;
     private int numberWorkers;
+    private SessionStorage sessionStorage;
 
     public MessengerServer() {}
 
     public void run() {
         BlockingQueue<Session> blockingQueue = new LinkedBlockingQueue<>();
-        ConnectionManager connectionManager = new ConnectionManager(port, blockingQueue);
+        ConnectionManager connectionManager = new ConnectionManager(port, blockingQueue, sessionStorage);
         //connectionManager.setPort(10000);
         //ConnectionManager.setProtocol(new SerializeProtocol());
         connectionManagerThread = new Thread(connectionManager);
