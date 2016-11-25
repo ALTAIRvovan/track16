@@ -137,6 +137,17 @@ public class MessengerClient {
                 createChatMessage.setText(tokens[1]);
                 send(createChatMessage);
                 break;
+            case "/chat_list":
+                TextMessage chatListMessage = new TextMessage();
+                chatListMessage.setType(Type.MSG_CHAT_LIST);
+                send(chatListMessage);
+                break;
+            case "/chat_history":
+                TextMessage chatHistMessage = new TextMessage();
+                chatHistMessage.setType(Type.MSG_CHAT_HIST);
+                chatHistMessage.setText(tokens[1]);
+                send(chatHistMessage);
+                break;
             case "/help":
                 // TODO: реализация
                 break;
@@ -144,7 +155,8 @@ public class MessengerClient {
                 // FIXME: пример реализации для простого текстового сообщения
                 TextMessage sendMessage = new TextMessage();
                 sendMessage.setType(Type.MSG_TEXT);
-                sendMessage.setText(tokens[1]);
+                sendMessage.setChatId(Long.parseLong(tokens[1]));
+                sendMessage.setText(tokens[2]);
                 send(sendMessage);
                 break;
             case "/info":

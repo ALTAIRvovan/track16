@@ -12,6 +12,7 @@ public class StorageFactory {
     private static ChatStore chatStore;
     private static UserStore userStore;
     private static ChatUserRelationStore chatUserRelationStore;
+    private static MessageStore messageStore;
 
     public static ChatStore getChatStore() throws DBException {
         if (chatStore == null) {
@@ -57,5 +58,20 @@ public class StorageFactory {
 
     public static void setChatUserRelationStore(ChatUserRelationStore chatUserRelationStore) {
         StorageFactory.chatUserRelationStore = chatUserRelationStore;
+    }
+
+    public static MessageStore getMessageStore() throws DBException {
+        if (messageStore == null) {
+            try {
+                messageStore = (MessageStore) Container.getInstance().getById("MessageStore");
+            } catch (IllegalClassFormatException e) {
+                throw new DBException("MessageStore not set", e);
+            }
+        }
+        return messageStore;
+    }
+
+    public static void setMessageStore(MessageStore messageStore) {
+        StorageFactory.messageStore = messageStore;
     }
 }

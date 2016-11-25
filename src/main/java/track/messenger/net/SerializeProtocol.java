@@ -15,6 +15,7 @@ public class SerializeProtocol implements Protocol {
     public Message decode(byte[] bytes) throws ProtocolException {
         ObjectMapper mapper = new ObjectMapper();
         try {
+            Logger.getLogger(SerializeProtocol.class).info(new String(bytes));
             return mapper.readValue(bytes, Message.class);
         } catch (IOException e) {
             throw new ProtocolException(e);

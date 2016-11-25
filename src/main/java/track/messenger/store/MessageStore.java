@@ -9,7 +9,7 @@ public interface MessageStore {
     /**
      * Список сообщений из чата
      */
-    List<Long> getMessagesFromChat(Long chatId);
+    List<Message> getMessagesFromChat(Long chatId);
 
     /**
      * Получить информацию о сообщении

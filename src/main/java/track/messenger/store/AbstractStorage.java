@@ -90,7 +90,9 @@ public abstract class AbstractStorage<T> {
     public Object selectObject(String whereCond) {
         return select(whereCond, (resultSet) -> {
             try {
-                return getObjectFromResultSet(resultSet);
+                if (resultSet.next()) {
+                    return getObjectFromResultSet(resultSet);
+                }
             } catch (SQLException e) {
                 logger.error("Не удалось создать объект", e);
             }

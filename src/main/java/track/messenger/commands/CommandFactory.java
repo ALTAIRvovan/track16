@@ -1,6 +1,8 @@
 package track.messenger.commands;
 
 import track.messenger.commands.accaunts.LoginCommand;
+import track.messenger.commands.chat.ChatHistoryCommand;
+import track.messenger.commands.chat.ChatListCommand;
 import track.messenger.commands.chat.CreateChatCommand;
 import track.messenger.messages.Type;
 
@@ -21,6 +23,10 @@ public class CommandFactory {
                 return new LoginCommand();
             case MSG_CHAT_CREATE:
                 return new CreateChatCommand();
+            case MSG_CHAT_LIST:
+                return new ChatListCommand();
+            case MSG_CHAT_HIST:
+                return new ChatHistoryCommand();
         }
         throw new CommandException("Command not found");
     }

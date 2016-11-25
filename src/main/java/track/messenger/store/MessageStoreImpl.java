@@ -2,6 +2,8 @@ package track.messenger.store;
 
 import track.messenger.database.DBException;
 import track.messenger.messages.Message;
+import track.messenger.messages.TextMessage;
+import track.messenger.messages.Type;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +20,12 @@ public class MessageStoreImpl extends AbstractStorage<Message> implements Messag
 
     @Override
     public Message getObjectFromResultSet(ResultSet resultSet) throws SQLException {
-        return null;
+        TextMessage textMessage = new TextMessage();
+        textMessage.setId(resultSet.getLong("id"));
+        textMessage.setSenderId(resultSet.getLong("sender_id"));
+        textMessage.setType(Type.MSG_TEXT);
+        textMessage.setText(resultSet.getString("text"));
+        return textMessage;
     }
 
     /**
@@ -27,8 +34,8 @@ public class MessageStoreImpl extends AbstractStorage<Message> implements Messag
      * @param chatId
      */
     @Override
-    public List<Long> getMessagesFromChat(Long chatId) {
-        return null;
+    public List getMessagesFromChat(Long chatId) {
+        return selectObjects("`chat_id`=" + chatId);
     }
 
     /**
@@ -38,7 +45,7 @@ public class MessageStoreImpl extends AbstractStorage<Message> implements Messag
      */
     @Override
     public Message getMessageById(Long messageId) {
-        return null;
+        return (Message)getById(messageId);
     }
 
     /**
@@ -49,6 +56,10 @@ public class MessageStoreImpl extends AbstractStorage<Message> implements Messag
      */
     @Override
     public void addMessage(Long chatId, Message message) {
-
+        TextMessage textMessage = (TextMessage)message;
+        String sql = "(`chat_id`, `sender_id`, `text`) VALUES (" + chatId + ", "
+                + message.getSenderId() + ", '"
+                + textMessage.getText() + "')";
+        insert(sql);
     }
 }

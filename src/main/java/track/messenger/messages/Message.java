@@ -16,6 +16,7 @@ import java.io.Serializable;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = TextMessage.class, name = "text_message"),
         @JsonSubTypes.Type(value = FormMessage.class, name = "form_message"),
+        @JsonSubTypes.Type(value = ListMessage.class, name = "list_message")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Message implements Serializable {

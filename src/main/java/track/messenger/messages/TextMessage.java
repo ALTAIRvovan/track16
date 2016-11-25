@@ -7,6 +7,15 @@ import java.util.Objects;
  */
 public class TextMessage extends Message {
     private String text;
+    private long chatId;
+
+    public long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
+    }
 
     public String getText() {
         return text;

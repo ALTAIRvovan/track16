@@ -18,6 +18,9 @@ public class ChatStoreImpl extends AbstractStorage<Chat> implements ChatStore {
     @Override
     public Chat getObjectFromResultSet(ResultSet resultSet) throws SQLException {
         Chat chat = new Chat();
+        if (resultSet.isBeforeFirst()) {
+            resultSet.next();
+        }
         chat.setId(resultSet.getLong("id"));
 //        String sql = "SELECT `user_id` FROM `" + dbChatUserTable + "` WHERE `chat_id` = " + chat.getId();
 //        ResultSet resultSet1 = execQuery(sql);
