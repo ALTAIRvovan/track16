@@ -32,7 +32,7 @@ public class Session {
     }
 
     public void send(Message msg) throws ProtocolException, IOException {
-        byte[] bytes = ConnectionManager.getProtocol().encode(msg);
+        byte[] bytes = MessengerServer.getProtocol().encode(msg);
         socket.write(ByteBuffer.wrap(bytes));
     }
 
@@ -60,5 +60,9 @@ public class Session {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public SocketChannel getSocket() {
+        return socket;
     }
 }

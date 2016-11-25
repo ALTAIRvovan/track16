@@ -17,6 +17,7 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by altair on 20.11.16.
@@ -27,9 +28,14 @@ public class ConnectionManager implements Runnable {
 
     private int port;
 
-    private static Protocol protocol;
+    private BlockingQueue<Session> outputSessionQueue;
 
     private Map<SocketChannel, Session> socketChannelSessionMap = new HashMap<>();
+
+    public ConnectionManager(int port, BlockingQueue<Session> outputSessionQueue) {
+        this.port = port;
+        this.outputSessionQueue = outputSessionQueue;
+    }
 
     /**
      * When an object implementing interface <code>Runnable</code> is used
@@ -57,16 +63,18 @@ public class ConnectionManager implements Runnable {
                 Set<SelectionKey> keys = selector.selectedKeys();
                 for (SelectionKey key : keys) {
                     if (key.isAcceptable()) {
-                        Socket s = serverSocketChannel.socket().accept();
-                        SocketChannel socketChannel = s.getChannel();
+                        Socket acceptSocket = serverSocketChannel.socket().accept();
+                        SocketChannel socketChannel = acceptSocket.getChannel();
                         socketChannel.configureBlocking(false);
                         socketChannel.register(selector, SelectionKey.OP_READ);
                         if (logger.isDebugEnabled()) {
-                            logger.debug("New connection localAddr:" + socketChannel.getLocalAddress() + " remoteAddr:" + socketChannel.getRemoteAddress());
+                            logger.debug("New connection localAddr:" + socketChannel.getLocalAddress() +
+                                    " remoteAddr:" + socketChannel.getRemoteAddress());
                         }
                     } else if (key.isReadable()) {
                         SocketChannel socketChannel = (SocketChannel) key.channel();
-                        processInput(socketChannel);
+                        outputSessionQueue.add(getSessionBySocket(socketChannel));
+                        //processInput(socketChannel);
                         //socketChannel.close();
                     }
                 }
@@ -80,14 +88,6 @@ public class ConnectionManager implements Runnable {
 
     public void setPort(int port) {
         this.port = port;
-    }
-
-    public static void setProtocol(Protocol newProtocol) {
-        protocol = newProtocol;
-    }
-
-    public static Protocol getProtocol() {
-        return protocol;
     }
 
     private ServerSocketChannel initServerSocketChannel() throws IOException {
@@ -110,23 +110,5 @@ public class ConnectionManager implements Runnable {
             return session;
         }
         return addSessionToSocket(socketChannel);
-    }
-
-    public void processInput(SocketChannel socketChannel) throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(128);
-        //TODO: что делать, если буфера не хватит
-        int numBytes = socketChannel.read(buffer);
-        if (numBytes > 0) {
-            try {
-                buffer.rewind();
-                Message message = protocol.decode(buffer.array());
-                getSessionBySocket(socketChannel).onMessage(message);
-                //buffer.rewind();
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-            }
-            //socketChannel.write(buffer);
-            buffer.clear();
-        }
     }
 }
