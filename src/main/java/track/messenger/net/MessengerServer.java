@@ -16,11 +16,12 @@ public class MessengerServer {
     private static Protocol protocol;
     private int numberWorkers;
     private SessionStorage sessionStorage;
+    private int queueCapacity;
 
     public MessengerServer() {}
 
     public void run() {
-        BlockingQueue<Session> blockingQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<Session> blockingQueue = new ArrayBlockingQueue<Session>(queueCapacity);
         ConnectionManager connectionManager = new ConnectionManager(port, blockingQueue, sessionStorage);
         connectionManagerThread = new Thread(connectionManager);
         connectionManagerThread.start();

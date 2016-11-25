@@ -25,6 +25,7 @@ public class Worker implements Runnable {
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 Session session = sessionQueue.take();
+                //Что делать , если буфера не хватит
                 int numberOfBytes = session.getSocket().read(buffer);
                 if (numberOfBytes > 0) {
                     try {
