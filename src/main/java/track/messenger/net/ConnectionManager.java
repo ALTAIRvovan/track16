@@ -73,7 +73,19 @@ public class ConnectionManager implements Runnable {
                         }
                     } else if (key.isReadable()) {
                         SocketChannel socketChannel = (SocketChannel) key.channel();
-                        outputSessionQueue.add(getSessionBySocket(socketChannel));
+                        Session session = getSessionBySocket(socketChannel);
+                        if ( key.isValid() && session.isAlive() && socketChannel.isConnected()) {
+                            outputSessionQueue.add(session);
+                        } else {
+                            if (logger.isDebugEnabled()) {
+                                logger.debug("Connection has closed:" + socketChannel.getLocalAddress() +
+                                        " remoteAddr:" + socketChannel.getRemoteAddress());
+                            }
+                            removeSessionToSocket(socketChannel);
+                            key.cancel();
+                            socketChannel.close();
+
+                        }
                         //processInput(socketChannel);
                         //socketChannel.close();
                     }
@@ -102,6 +114,10 @@ public class ConnectionManager implements Runnable {
         Session session = new Session(socketChannel);
         socketChannelSessionMap.put(socketChannel, session);
         return session;
+    }
+
+    private void removeSessionToSocket(SocketChannel socketChannel) {
+        socketChannelSessionMap.remove(socketChannel);
     }
 
     private Session getSessionBySocket(SocketChannel socketChannel) {

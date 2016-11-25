@@ -37,6 +37,8 @@ public class Worker implements Runnable {
                     }
                     //socketChannel.write(buffer);
                     buffer.clear();
+                } else if (numberOfBytes < 0) {
+                    session.kill();
                 }
             }
         } catch (InterruptedException e) {

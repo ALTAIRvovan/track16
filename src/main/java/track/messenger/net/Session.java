@@ -26,6 +26,8 @@ public class Session {
     // сокет на клиента
     private SocketChannel socket;
 
+    private boolean alive = true;
+
 
     public Session(SocketChannel socket) {
         this.socket = socket;
@@ -64,5 +66,13 @@ public class Session {
 
     public SocketChannel getSocket() {
         return socket;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void kill() {
+        this.alive = false;
     }
 }
