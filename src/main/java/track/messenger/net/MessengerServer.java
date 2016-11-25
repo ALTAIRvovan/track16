@@ -1,5 +1,7 @@
 package track.messenger.net;
 
+import javassist.bytecode.analysis.*;
+
 import java.util.concurrent.*;
 
 /**
@@ -8,7 +10,7 @@ import java.util.concurrent.*;
 public class MessengerServer {
 
     private Thread connectionManagerThread;
-    private Thread[] workers;
+    private ExecutorService workersService;
 
     private int port;
     private static Protocol protocol;
@@ -20,15 +22,11 @@ public class MessengerServer {
     public void run() {
         BlockingQueue<Session> blockingQueue = new LinkedBlockingQueue<>();
         ConnectionManager connectionManager = new ConnectionManager(port, blockingQueue, sessionStorage);
-        //connectionManager.setPort(10000);
-        //ConnectionManager.setProtocol(new SerializeProtocol());
         connectionManagerThread = new Thread(connectionManager);
         connectionManagerThread.start();
-        workers = new Thread[numberWorkers];
-        for (Thread workerThread: workers) {
-            Worker worker = new Worker(blockingQueue, protocol);
-            workerThread = new Thread(worker);
-            workerThread.start();
+        workersService = Executors.newFixedThreadPool(numberWorkers);
+        for (int i = 0; i < numberWorkers; i++) {
+            workersService.submit(new Worker(blockingQueue, protocol));
         }
     }
 
