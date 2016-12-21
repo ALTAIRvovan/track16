@@ -1,6 +1,7 @@
 package track.messenger.commands;
 
 import track.messenger.commands.accaunts.LoginCommand;
+import track.messenger.commands.accaunts.RegisterCommand;
 import track.messenger.commands.chat.ChatHistoryCommand;
 import track.messenger.commands.chat.ChatListCommand;
 import track.messenger.commands.chat.CreateChatCommand;
@@ -21,6 +22,8 @@ public class CommandFactory {
                 return new InfoCommand();
             case MSG_LOGIN:
                 return new LoginCommand();
+            case MSG_REGISTER:
+                return new RegisterCommand();
             case MSG_CHAT_CREATE:
                 return new CreateChatCommand();
             case MSG_CHAT_LIST:

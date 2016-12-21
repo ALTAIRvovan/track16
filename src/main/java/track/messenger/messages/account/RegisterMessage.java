@@ -12,8 +12,6 @@ import track.messenger.messages.Type;
  * Created by altair on 23.11.16.
  */
 @JsonTypeName("form_message")
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class RegisterMessage extends LoginMessage {
 
     public RegisterMessage() {

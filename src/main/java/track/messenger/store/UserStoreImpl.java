@@ -36,7 +36,7 @@ public class UserStoreImpl extends AbstractStorage<User> implements UserStore {
      */
     @Override
     public User addUser(User user) {
-        String cond = "(`login`, `password`) VALUES (" + user.getLogin() + ", " + user.getPassword() + ")";
+        String cond = "(`login`, `password`) VALUES ('" + user.getLogin() + "', '" + user.getPassword() + "')";
         List<Long> list = insert(cond);
         user.setId(list.get(0));
         return user;

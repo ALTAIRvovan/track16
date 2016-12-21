@@ -58,7 +58,7 @@
         },
         "numberWorkers": {
           "name": "numberWorkers",
-          "value": "2",
+          "value": "1",
           "type": "VAL"
         },
         "sessionStorage": {
